@@ -36,6 +36,14 @@ jobs:
             echo "::endgroup::"
           done
 
+      - name: Example outlines pass the outline checks
+        run: |
+          for f in examples/*/07-outline.md; do
+            echo "::group::$f"
+            python3 skills/research-first-writer/scripts/check_article.py --outline "$f"
+            echo "::endgroup::"
+          done
+
       - name: The weak draft is still caught
         run: |
           if python3 skills/research-first-writer/scripts/check_article.py examples/audit-a-weak-draft/draft.md; then
@@ -47,6 +55,7 @@ jobs:
           d=$(mktemp -d)
           python3 skills/research-first-writer/scripts/new_run.py smoke-test --dir "$d"
           python3 skills/research-first-writer/scripts/check_article.py examples/how-to-get-cited-by-ai-search/article.md --json | python3 -c "import json,sys; json.load(sys.stdin)"
+          python3 skills/research-first-writer/scripts/check_article.py --outline examples/how-to-get-cited-by-ai-search/07-outline.md --json | python3 -c "import json,sys; json.load(sys.stdin)"
           python3 skills/research-first-writer/scripts/score_pages.py examples/astro-vs-nextjs-for-a-blog/pages.json --json | python3 -c "import json,sys; json.load(sys.stdin)"
 
       - name: Page scorer runs on every example

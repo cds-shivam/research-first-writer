@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- `check_article.py --outline`: rule-based outline checks from section 3 of the checklists
 - `new_run.py`: scaffold a run folder from the templates
 - `--json` output for `check_article.py` and `score_pages.py`
 

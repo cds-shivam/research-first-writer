@@ -19,7 +19,7 @@ Status key: ✅ done · 🚧 in progress · 🔜 next · 💡 idea, open for dis
 ## v0.2: Easier to use 🔜
 
 - 🔜 Slash commands: `/research-first-writer:write <keyword>`, `:audit <file>`, `:brief <keyword>`
-- 🔜 `check_article.py --outline` for the outline checks (section 3 of the checklists)
+- ✅ `check_article.py --outline` for the outline checks (section 3 of the checklists)
 - ✅ `--json` output from both scripts, for pipelines and dashboards
 - ✅ `new_run.py` scaffold that creates `articles/<slug>/01-brief.md … 07-outline.md` from the templates
 - 🔜 An example run for each remaining kind: **FAQ**, **review**, **alternatives** (**good first issue**: pick a keyword you know)

@@ -89,7 +89,7 @@ It **passes** when the weighted score is at least 0.75, no dimension is under 0.
 
 ## Reference files
 - `references/checklists.md`: the outline and draft checks in full, the page-scoring signals and weights, baseline roles, number-grounding rules. Read it when checking or reviewing an article, or scoring pages.
-- `scripts/check_article.py`: the draft checks a rule can decide (search fields, structure, length, kind rules, keyword density, number grounding, first-hand claims, NEEDS_HUMAN markers, style). Exits 1 when a check blocks; add `--json` for machine-readable results (also on `score_pages.py`).
+- `scripts/check_article.py`: the draft and outline checks a rule can decide (search fields, structure, length, kind rules, keyword density, number grounding, first-hand claims, NEEDS_HUMAN markers, style; pass `--outline` for `07-outline.md`). Exits 1 when a check blocks; add `--json` for machine-readable results (also on `score_pages.py`).
 - `scripts/new_run.py`: scaffolds `articles/<slug>/` with the step files, pre-filled from the templates. Refuses to overwrite.
 - `scripts/score_pages.py`: page scores from observed signals, with weights renormalised over what was observable and coverage reported.
 - `references/templates.md`: fill-in templates for the brief, research brief, outline and review report, plus a worked example. Read it when producing any of those.

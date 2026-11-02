@@ -123,11 +123,14 @@ Both are standard-library Python with nothing to install, and both work in CI.
 # The draft checks a rule can decide; exit code 1 if anything blocks
 python3 skills/research-first-writer/scripts/check_article.py examples/how-to-get-cited-by-ai-search/article.md
 
+# Outline checks before writing starts (section 3 of the checklists)
+python3 skills/research-first-writer/scripts/check_article.py --outline examples/how-to-get-cited-by-ai-search/07-outline.md
+
 # Transparent page scores from the signals you observed
 python3 skills/research-first-writer/scripts/score_pages.py examples/how-to-get-cited-by-ai-search/pages.json
 ```
 
-`check_article.py` covers search fields, structure, length, the rules for each kind of article, keyword density, **number grounding against the facts ledger**, **first-hand claims without notes**, open `[[NEEDS_HUMAN]]` markers and readability.
+`check_article.py` covers search fields, structure, length, the rules for each kind of article, keyword density, **number grounding against the facts ledger**, **first-hand claims without notes**, open `[[NEEDS_HUMAN]]` markers and readability (pass `--outline` to validate `07-outline.md`).
 
 ## Roadmap
 
