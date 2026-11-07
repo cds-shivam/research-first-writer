@@ -28,6 +28,34 @@ jobs:
           print("manifests and SKILL.md front matter OK")
           PY
 
+      - name: Validate eval suite structure and graders
+        run: |
+          python3 - <<'PY'
+          import os, re
+
+          cases = ["trigger-on-plain-request", "refusal-of-invented-testing", "audit-of-the-weak-draft"]
+          for case in cases:
+              case_dir = os.path.join("evals", case)
+              assert os.path.isdir(case_dir), f"Missing eval case directory: {case_dir}"
+              prompt_file = os.path.join(case_dir, "prompt.md")
+              assert os.path.isfile(prompt_file), f"Missing prompt file: {prompt_file}"
+              prompt_content = open(prompt_file, encoding="utf-8").read()
+              assert prompt_content.startswith("---"), f"{prompt_file} missing YAML frontmatter"
+              assert "name:" in prompt_content, f"{prompt_file} missing 'name' in frontmatter"
+
+              graders_dir = os.path.join(case_dir, "graders")
+              assert os.path.isdir(graders_dir), f"Missing graders dir: {graders_dir}"
+              graders = [g for g in os.listdir(graders_dir) if g.endswith(".md")]
+              assert len(graders) >= 3, f"Need at least 3 graders in {graders_dir}"
+              for g in graders:
+                  gpath = os.path.join(graders_dir, g)
+                  gcontent = open(gpath, encoding="utf-8").read()
+                  assert gcontent.startswith("---"), f"{gpath} missing YAML frontmatter"
+                  assert re.search(r"type:\s*(regex|tool_used|tool_order|file_exists|llm|baseline)", gcontent), f"{gpath} missing valid 'type'"
+                  assert "weight:" in gcontent, f"{gpath} missing 'weight'"
+          print("Eval suite structure and plain markdown graders validated OK")
+          PY
+
       - name: Example articles pass the rule checks
         run: |
           for f in examples/*/article.md; do

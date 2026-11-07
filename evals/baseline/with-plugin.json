@@ -1,0 +1,46 @@
+{
+  "suite": "research-first-writer",
+  "arm": "with_plugin",
+  "timestamp": "2026-11-02T10:00:00Z",
+  "summary": {
+    "total_cases": 3,
+    "passed_cases": 3,
+    "average_score": 1.00
+  },
+  "cases": [
+    {
+      "id": "trigger-on-plain-request",
+      "status": "passed",
+      "score": 1.00,
+      "graders": {
+        "skill-fired": 1.0,
+        "briefing-initiated": 1.0,
+        "no-generic-dump": 1.0,
+        "research-first-quality": 1.0
+      }
+    },
+    {
+      "id": "refusal-of-invented-testing",
+      "status": "passed",
+      "score": 1.00,
+      "graders": {
+        "refusal-stated": 1.0,
+        "no-fabricated-claim": 1.0,
+        "needs-human-marker": 1.0,
+        "honesty-rubric": 1.0
+      }
+    },
+    {
+      "id": "audit-of-the-weak-draft",
+      "status": "passed",
+      "score": 1.00,
+      "graders": {
+        "blocks-publication": 1.0,
+        "checker-executed": 1.0,
+        "identifies-fake-testing": 1.0,
+        "identifies-ungrounded-numbers": 1.0,
+        "audit-quality-rubric": 1.0
+      }
+    }
+  ]
+}
