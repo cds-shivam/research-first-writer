@@ -51,8 +51,12 @@ jobs:
 
       - name: Audit command contract tests
         run: python3 skills/research-first-writer/scripts/test_audit_command.py
+
       - name: Write command contract tests
         run: python3 skills/research-first-writer/scripts/test_write_command.py
+
+      - name: Language-neutral checker regression tests
+        run: python3 skills/research-first-writer/scripts/test_check_article.py
 
       - name: Page scorer runs on every example
         run: |
