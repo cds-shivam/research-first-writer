@@ -18,7 +18,7 @@ Status key: ✅ done · 🚧 in progress · 🔜 next · 💡 idea, open for dis
 
 ## v0.2: Easier to use 🔜
 
-- 🔜 Slash commands: `/research-first-writer:write <keyword>`, `:audit <file>`, `:brief <keyword>`
+- ✅ Slash commands: `/research-first-writer:write <keyword>`, `:audit <file>`, `:brief <keyword>`
 - ✅ `check_article.py --outline` for the outline checks (section 3 of the checklists)
 - ✅ `--json` output from both scripts, for pipelines and dashboards
 - ✅ `new_run.py` scaffold that creates `articles/<slug>/01-brief.md … 07-outline.md` from the templates
@@ -27,8 +27,8 @@ Status key: ✅ done · 🚧 in progress · 🔜 next · 💡 idea, open for dis
 
 ## v0.3: Provably better 💡
 
-- 💡 **An eval suite** (`claude plugin eval`): does the skill trigger on "write an article about X"? Does it refuse to write "we tested" without notes? Does every number reach the ledger?
-- 💡 **An originality checker**: verbatim runs (block at 14 words, warn at 10) and shared 5-word phrases against the pages read
+- ✅ **An eval suite** (`claude plugin eval`): does the skill trigger on "write an article about X"? Does it refuse to write "we tested" without notes? Does every number reach the ledger? Scored runs and plain-markdown graders in `evals/`.
+- ✅ **An originality checker**: verbatim runs (block at 14 words, warn at 10) and shared 5-word phrases against the pages read, with credited-quote and required-FAQ exemptions
 - 💡 **A citation verifier**: re-fetch each ledger URL and confirm the quote still appears; flag link rot and changed prices
 - 💡 A benchmark: the same 10 keywords, with and without the skill, scored by the judge rubric, results published
 

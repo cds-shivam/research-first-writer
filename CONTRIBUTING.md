@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for helping. Contributions are welcome in these four areas, most valuable first.
+Thanks for helping. Contributions are welcome in these five areas, most valuable first.
 
 ## 1. Add an example run
 
@@ -44,10 +44,39 @@ Keep `SKILL.md` under about 500 lines; put detail in `references/`.
 
 Screenshots are generated, never hand-edited: `pip install markdown && python3 docs/render_screenshots.py`.
 
+## 5. Run and add evaluation cases (`claude plugin eval`)
+
+We benchmark skill triggering, research integrity and anti-hallucination guardrails using Claude Code's native evaluation suite in `evals/`:
+
+```bash
+# Run the complete evaluation suite against the plugin
+claude plugin eval .
+
+# Run an individual test case
+claude plugin eval . --case trigger-on-plain-request
+
+# Cost control: run 1 pass per case
+claude plugin eval . --runs 1
+
+# Fail in CI if score drops below threshold
+claude plugin eval . --threshold 0.85
+```
+
+The evaluation suite includes cases for:
+- **`trigger-on-plain-request`**: Confirms Claude triggers `research-first-writer` on a plain article request and starts the briefing workflow (Step 1) instead of hallucinating an unresearched draft.
+- **`refusal-of-invented-testing`**: Confirms Claude refuses instructions to fabricate hands-on testing claims ("we tested") without notes (Principle 5), suggesting `[[NEEDS_HUMAN]]` markers or real test notes.
+- **`audit-of-the-weak-draft`**: Confirms Claude executes `check_article.py`, catches blocking failures (fake testing claims, ungrounded numbers, stock phrases), and blocks publication.
+
+### Adding an evaluation case:
+1. Create a case folder: `evals/<case-name>/`.
+2. Add `prompt.md` with YAML frontmatter (`name`, `description`, `runs`, `max_turns`, `timeout_seconds`, `allowed_tools`) and the prompt text.
+3. Write graders as plain markdown files under `evals/<case-name>/graders/*.md`. Each grader file specifies frontmatter with `name`, `type` (`regex`, `tool_used`, `tool_order`, `file_exists`, `llm`, or `baseline`), and `weight`.
+4. Test both **with** and **without** the plugin to confirm a meaningful positive performance delta ($\Delta$). See [`evals/README.md`](evals/README.md) and [`evals/baseline/baseline-comparison.md`](evals/baseline/baseline-comparison.md).
+
 ## Pull requests
 
 - One topic per PR. Use a conventional title (`feat:`, `fix:`, `docs:`, `example:`).
-- CI must pass: plugin validation, checks on every example, script smoke tests.
+- CI must pass: plugin validation, eval suite verification, checks on every example, script smoke tests.
 - By contributing you agree that your work is released under the MIT License.
 
 Please follow the [Code of Conduct](CODE_OF_CONDUCT.md).

@@ -26,6 +26,7 @@ Standard library only. Exit code 1 when any check blocks, so it works in CI.
 import argparse
 import re
 import sys
+import unicodedata
 from pathlib import Path
 
 # Safe utf-8 output on consoles (e.g. Windows)
@@ -72,7 +73,33 @@ def plain(md):
 
 
 def words(s):
-    return re.findall(r"[A-Za-z0-9][A-Za-z0-9'’.\-/%$]*", s)
+    # Unicode-aware tokenisation keeps combining marks (for example, Hindi
+    # vowel signs) attached to their word instead of splitting one word into
+    # several consonant-sized tokens.
+    tokens, current = [], []
+    for i, char in enumerate(s):
+        category = unicodedata.category(char)
+        is_word_char = category[0] in ("L", "M", "N")
+        next_is_word = i + 1 < len(s) and unicodedata.category(s[i + 1])[0] in ("L", "M", "N")
+        if is_word_char:
+            current.append(char)
+        elif char in "'’.-" and current and next_is_word:
+            current.append(char)
+        elif current:
+            tokens.append("".join(current))
+            current = []
+    if current:
+        tokens.append("".join(current))
+    return tokens
+
+
+def non_latin_script(text):
+    """Return True when alphabetic text is predominantly outside Latin."""
+    letters = [c for c in text if c.isalpha()]
+    if not letters:
+        return False
+    non_latin = sum(1 for c in letters if not ('A' <= c <= 'Z' or 'a' <= c <= 'z'))
+    return non_latin / len(letters) >= 0.30
 
 
 def syllables(word):
@@ -528,6 +555,11 @@ def check_outline(args):
 
 
 def main():
+    # Reports include Unicode article text and check labels. Keep output usable
+    # on Windows consoles whose legacy code page cannot encode those scripts.
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(encoding="utf-8", errors="replace")
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("article", help="path to article.md or 07-outline.md")
     ap.add_argument("--outline", action="store_true", help="run outline checks (references/checklists.md §3) on 07-outline.md")
@@ -637,10 +669,16 @@ def main():
         PASS if not first_hand or has_notes else BLOCK, ", ".join(first_hand) if first_hand else "")
 
     # Style
-    ease, grade = flesch(text)
-    add("Style", "Reading ease ≥ 45, grade ≤ 12", PASS if ease >= 45 and grade <= 12 else WARN, f"ease {ease:.0f}, grade {grade:.1f}")
-    stock = [p for p in STOCK_PHRASES if p in text.lower()]
-    add("Style", "Fewer than two stock phrases", PASS if len(stock) < 2 else WARN, ", ".join(stock))
+    if non_latin_script(text):
+        add("Style", "Reading ease ≥ 45, grade ≤ 12", WARN,
+            "not evaluated for predominantly non-Latin text")
+        add("Style", "Fewer than two stock phrases", PASS,
+            "English stock-phrase check not applicable")
+    else:
+        ease, grade = flesch(text)
+        add("Style", "Reading ease ≥ 45, grade ≤ 12", PASS if ease >= 45 and grade <= 12 else WARN, f"ease {ease:.0f}, grade {grade:.1f}")
+        stock = [p for p in STOCK_PHRASES if p in text.lower()]
+        add("Style", "Fewer than two stock phrases", PASS if len(stock) < 2 else WARN, ", ".join(stock))
     paras = [p for p in re.split(r"\n\s*\n", body) if p.strip() and not p.lstrip().startswith(("#", "|", "-", "*", ">", "1."))]
     long_paras = [p for p in paras if len(words(plain(p))) > 130]
     add("Style", "Paragraphs under 130 words", PASS if not long_paras else WARN, f"{len(long_paras)} long")

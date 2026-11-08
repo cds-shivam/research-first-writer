@@ -5,6 +5,7 @@
 - `check_article.py --outline`: rule-based outline checks from section 3 of the checklists
 - `new_run.py`: scaffold a run folder from the templates
 - `--json` output for `check_article.py` and `score_pages.py`
+- `check_originality.py`: compare articles with research sources for copied runs and shared five-word phrases, with short credited-quote and required-FAQ exemptions
 
 ## 0.1.0 (2026-11-01)
 
